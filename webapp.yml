@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  labels:
+    app: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: prateek9814/project-front
+        ports:
+        - containerPort: 80
+        # env:
+        # - name: VITE_API_URL
+        #   value: "http://adb7890c6d97046518a82dde2090169d-1206718263.us-east-2.elb.amazonaws.com:8080/api"
+        #   #need to update the loadbalancer service URL after ruuning the backend service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+spec:
+  type: LoadBalancer 
+  selector:
+    app: webapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      
